@@ -1,0 +1,555 @@
+<html lang="zh-CN">
+  <head>
+    <title>成绩查询</title>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <!--[if lt IE 9]>
+      <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+      <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="./plug-in/web/js/jquery.min.js"></script>
+    <script src="./plug-in/web/js/bootstrap.min.js"></script>
+    <link href="./plug-in/web/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="./plug-in/web/css/d.css" rel="stylesheet" />
+    <link
+      href="./plug-in/font-awesome-4.7/css/font-awesome.css"
+      rel="stylesheet"
+    />
+    <script src="./plug-in/layui/layer/layer.js"></script>
+    <script src="./plug-in/layui/laytpl/laytpl.js"></script>
+    <link rel="shortcut icon" href="/images/web/favicon.ico" />
+    <style type="text/css">
+      body {
+        font-family: 微软雅黑, 宋体, 黑体;
+        font-size: 12px;
+        padding: 0px;
+        margin: 0px;
+        background: url(./images/web/bj.jpg) no-repeat rgb(247, 251, 255);
+      }
+
+      #zxlyFrm input {
+        width: 220px;
+        height: 32px;
+        text-indent: 10px;
+        border: 1px solid #01a7e1;
+        border-radius: 10px;
+        font-size: 14px;
+        outline: none;
+        -webkit-appearance: none;
+        margin: 5px 0;
+      }
+
+      .infoo p {
+        font-size: 14px;
+      }
+
+      .dian span {
+        width: 40px;
+      }
+
+      td {
+        padding: 10px 10px;
+      }
+
+      .code {
+        background-color: silver;
+        font-family: Arial;
+        /*设置字体*/
+        font-style: initial;
+        color: brown;
+        font-size: 20px;
+        border: 0;
+        padding: 2px 3px;
+        letter-spacing: 3px;
+        font-weight: bolder;
+        width: 81px;
+        height: 23px;
+        margin-top: -35px;
+      }
+    </style>
+  </head>
+
+  <body class="container">
+    <div class="header">
+      <div class="container">
+        <img
+          src="http://cx.rsj.linyi.gov.cn:80/images/web/logo1.png"
+          class="img-responsive"
+          style="width: 600px; height: 85px"
+        />
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="title">
+        <div class="col-xs-3 col-md-3 tt_leftp">信息查询</div>
+        <div class="col-xs-9 col-md-9 tt_rightp"></div>
+      </div>
+      <p class="tis" style="line-height: 35px">
+        <br />
+      </p>
+      <div id="pageTitle" class="content_body" style="font-size: 16px"></div>
+      <form
+        name="zxlyFrm"
+        id="zxlyFrm"
+        method="POST"
+        action=""
+        class="form-horizontal"
+      >
+        <table align="center" id="queryFrom"></table>
+      </form>
+      <p class="dian text-center">
+        <input
+          value="查询"
+          class="btn btn btn-success"
+          name="zxly_submit"
+          onclick="doSubmit()"
+        />
+      </p>
+
+      <div class="text-center down">
+        临沂市人力资源和社会保障局 © 版权所有 鲁ICP备16014239号-1 鲁公网安备
+        37130202371491号<br />
+        地址：临沂市北城新区北京路33号 邮编：276000 <br />
+        <span>
+          <a href="javascript:void(0);" target="_blank">
+            <img
+              id="imgConac"
+              vspace="0"
+              hspace="0"
+              border="0"
+              src="./images/red.png"
+              data-bd-imgshare-binded="1"
+            />
+          </a>
+
+          <a
+            href="https://zfwzgl.www.gov.cn/exposure/jiucuo.html?site_code=3713000005&url=http%3A%2F%2Frsj.linyi.gov.cn%2F"
+            target="_blank"
+          >
+            <img
+              id="imgConac1"
+              vspace="0"
+              hspace="0"
+              border="0"
+              src="./images/jiucuo.png"
+              data-bd-imgshare-binded="1"
+            />
+          </a>
+        </span>
+        <span id="_ideConac"></span>
+      </div>
+    </div>
+    <script src="./WebMenuController.json"></script>
+    <script>
+      $(function () {
+        queryFrom();
+      });
+
+      var code;
+      function createCode() {
+        //函数体
+        code = "";
+        var codeLength = 5; //验证码的长度
+        var checkCode = document.getElementById("checkCode");
+        var codeChars = new Array(
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          "a",
+          "b",
+          "c",
+          "d",
+          "e",
+          "f",
+          "g",
+          "h",
+          "i",
+          "j",
+          "k",
+          "l",
+          "m",
+          "n",
+          "o",
+          "p",
+          "q",
+          "r",
+          "s",
+          "t",
+          "u",
+          "v",
+          "w",
+          "x",
+          "y",
+          "z",
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "I",
+          "J",
+          "K",
+          "L",
+          "M",
+          "N",
+          "O",
+          "P",
+          "Q",
+          "R",
+          "S",
+          "T",
+          "U",
+          "V",
+          "W",
+          "X",
+          "Y",
+          "Z"
+        ); //所有候选组成验证码的字符，当然也可以用中文的
+        for (var i = 0; i < codeLength; i++) {
+          var charNum = Math.floor(Math.random() * 52); //设置随机产生
+          code += codeChars[charNum];
+        }
+        if (checkCode) {
+          checkCode.className = "code";
+          checkCode.innerHTML = code;
+        }
+      }
+
+      function checkCode() {
+        if (document.getElementById("code").value == "") {
+          alert("验证码不能为空！");
+          createCode(); //输错一次或提交一次都将会刷新一次验证码
+          return false; //结束本次会话
+        } else if (
+          document.getElementById("code").value.toUpperCase() !=
+          code.toUpperCase()
+        ) {
+          //toUpperCase不区分大小写
+          alert("您输入的验证码有误，请重新输入！！");
+          createCode(); //读取文件
+          return false;
+        } else {
+          return true;
+        }
+      }
+
+      var sign = 0;
+
+      function queryFrom() {
+        var tableName = getUrlParam("tableName");
+        $.getJSON("./WebMenuController.json", function (jsonData) {
+          var data = JSON.parse(JSON.stringify(jsonData));
+          var $queryFrom = "";
+          for (var i = 1; i < data.length; i++) {
+            if (data[i].is_query == "Y") {
+              $queryFrom +=
+                " <tr>\n" +
+                "    <td>\n" +
+                "        " +
+                data[i].content +
+                ":\n" +
+                "    </td>\n" +
+                "    <td>\n" +
+                '        <input type="text" class="textname form-control query checkFiled" onchange="checkField(this,\'' +
+                data[i].field_valid_type +
+                '\')" name="' +
+                data[i].field_name +
+                '" id="' +
+                data[i].field_name +
+                '" style="display: inline">&nbsp;&nbsp;&nbsp;&nbsp;<spam style="color:red;font-size: 12px;display: none"></span>\n' +
+                "    </td>\n" +
+                " </tr>";
+            }
+          }
+          // $queryFrom+='<tr>\n' +
+          //     '                <td>验证码:</td>\n' +
+          //     '                <td>\n' +
+          //     '                    <input type="text" id="code" name="code" class="textname form-control" style="display: inline">\n' +
+          //     '                    <img src="/WebMenuController.do?imageCode" title="更换一张验证码图片" onclick="loadPicimageCode()" height="30">\n' +
+          //     '                </td>\n' +
+          //     '            </tr>';
+          $queryFrom +=
+            "<tr>\n" +
+            "                <td>验证码:</td>\n" +
+            "                <td>\n" +
+            '                    <input type="text" id="code" name="code" class="textname form-control" style="display: inline">\n' +
+            '                    <div class="code" id="checkCode" style="display: inline" onclick="createCode()" ></div>\n' +
+            "                </td>\n" +
+            "            </tr>";
+
+          $("#queryFrom").html($queryFrom);
+          $("#pageTitle").html(data[0].pageTitle);
+          createCode();
+        });
+      }
+      function doSubmit() {
+        var configId = getUrlParam("tableName");
+        var params = "";
+        if (!checkCode()) {
+          return;
+        }
+        var isnull = false;
+        $(".query").each(function () {
+          if ($(this).val() == "" || $(this).val() == undefined) {
+            isnull = true;
+          }
+        });
+        if (code == "" || isnull == true) {
+          alert("请输入全部查询条件");
+          return;
+        }
+        $(".query").each(function () {
+          if ($(this).val() != "") {
+            // params.push($(this).attr("name")+"="+$(this).val());
+            params += $(this).attr("name") + "=" + $(this).val() + ",";
+          }
+        });
+        $.getJSON("./queryResult.json", function (res) {
+          var data = JSON.parse(JSON.stringify(res));
+          if (data.status != 3) {
+            alert(data.res);
+            window.location.reload();
+          } else {
+            var name = data.res[0];
+            var res = data.res[1];
+            var $resFrom = "";
+            $.each(name, function (key, value) {
+              //每一行
+              $.each(res, function (key1, value1) {
+                if (key == key1) {
+                  $resFrom +=
+                    "<tr>\n" +
+                    "          <td>\n" +
+                    "              <span> " +
+                    value +
+                    "：" +
+                    value1 +
+                    "</span>\n" +
+                    "          </td>\n" +
+                    "      </tr>";
+                }
+              });
+            });
+            $("#queryFrom").html($resFrom);
+          }
+        });
+      }
+
+      function getUrlParam(paraName) {
+        var url = document.location.toString();
+        var arrObj = url.split("?");
+        if (arrObj.length > 1) {
+          var arrPara = arrObj[1].split("&");
+          var arr;
+          for (var i = 0; i < arrPara.length; i++) {
+            arr = arrPara[i].split("=");
+            if (arr != null && arr[0] == paraName) {
+              return arr[1];
+            }
+          }
+          return "";
+        } else {
+          return "";
+        }
+      }
+
+      function checkField($ele, typecode) {
+        var value = $($ele).val();
+        if (typecode == "*") {
+          //非空
+          if (value == "") {
+            $($ele).next().text("该查询条件不可为空");
+            $($ele).next().show();
+            sign += 1;
+            return false;
+          } else {
+            $($ele).next().text("");
+            $($ele).next().hide();
+            if (sign > 0) {
+              sign -= 1;
+            }
+            return true;
+          }
+        } else if (typecode == "n") {
+          //数字
+          var reg = /[0-9\/]/;
+          if (!reg.test(value)) {
+            $($ele).next().text("该查询条件只能为数字");
+            $($ele).next().show();
+            sign += 1;
+            return false;
+          } else {
+            $($ele).next().text("");
+            $($ele).next().hide();
+            if (sign > 0) {
+              sign -= 1;
+            }
+            return true;
+          }
+        } else if (typecode == "s") {
+          //字母
+          var reg = /^[a-z]+$/i;
+          if (!reg.test(value)) {
+            $($ele).next().text("该查询条件只能为字母");
+            $($ele).next().show();
+            sign += 1;
+            return false;
+          } else {
+            $($ele).next().text("");
+            $($ele).next().hide();
+            if (sign > 0) {
+              sign -= 1;
+            }
+            return true;
+          }
+        } else if (typecode == "p") {
+          //邮政编码
+          var reg = /^[1-9][0-9]{5}$/;
+          if (!reg.test(value)) {
+            $($ele).next().text("请输入正确的邮政编码");
+            $($ele).next().show();
+            sign += 1;
+            return false;
+          } else {
+            $($ele).next().text("");
+            $($ele).next().hide();
+            if (sign > 0) {
+              sign -= 1;
+            }
+            return true;
+          }
+        } else if (typecode == "m") {
+          //手机号
+          var reg = /^((0\d{2,3}-\d{7,8})|(1[3584]\d{9}))$/;
+          if (!reg.test(value)) {
+            $($ele).next().text("请输入正确的手机号码");
+            $($ele).next().show();
+            sign += 1;
+            return false;
+          } else {
+            $($ele).next().text("");
+            $($ele).next().hide();
+            if (sign > 0) {
+              sign -= 1;
+            }
+            return true;
+          }
+        } else if (typecode == "e") {
+          //电子邮箱
+          var reg = /^\w+@[a-zA-Z0-9]{2,10}(?:\.[a-z]{2,4}){1,3}$/;
+          if (!reg.test(value)) {
+            $($ele).next().text("请输入正确的电子邮箱");
+            $($ele).next().show();
+            sign += 1;
+            return false;
+          } else {
+            $($ele).next().text("");
+            $($ele).next().hide();
+            if (sign > 0) {
+              sign -= 1;
+            }
+            return true;
+          }
+        } else if (typecode == "url") {
+          //网址
+          var reg = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+          if (!reg.test(value)) {
+            $($ele).next().text("请输入正确的网址(以http或https开头)");
+            $($ele).next().show();
+            sign += 1;
+            return false;
+          } else {
+            $($ele).next().text("");
+            $($ele).next().hide();
+            if (sign > 0) {
+              sign -= 1;
+            }
+            return true;
+          }
+        } else if (typecode == "n6-16") {
+          //6到16位数字
+          var reg = /[0-9\/]{6,16}/;
+          if (!reg.test(value)) {
+            $($ele).next().text("请输入6-10位整数");
+            $($ele).next().show();
+            sign += 1;
+            return false;
+          } else {
+            $($ele).next().text("");
+            $($ele).next().hide();
+            if (sign > 0) {
+              sign -= 1;
+            }
+            return true;
+          }
+        } else if (typecode == "*6-16") {
+          //固定电话
+          var reg = /^((0\d{2,3})-)(\d{7,8})(-(\d{3,}))?$/;
+          if (reg.test(value)) {
+            $($ele).next().text("请输入正确的固定电话");
+            $($ele).next().show();
+            sign += 1;
+            return false;
+          } else {
+            $($ele).next().text("");
+            $($ele).next().hide();
+            if (sign > 0) {
+              sign -= 1;
+            }
+            return true;
+          }
+        } else if (typecode == "s6-18") {
+          //身份证号
+          var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+          if (!reg.test(value)) {
+            $($ele).next().text("请输入正确的身份证号");
+            $($ele).next().show();
+            sign += 1;
+            return false;
+          } else {
+            $($ele).next().text("");
+            $($ele).next().hide();
+            if (sign > 0) {
+              sign -= 1;
+            }
+            return true;
+          }
+        } else if (typecode == "only") {
+          var reg = /^[\u4E00-\u9FA5]{1,8}$/;
+          if (!reg.test(value)) {
+            $($ele).next().text("请输入1-6个中文汉字");
+            $($ele).next().show();
+            sign += 1;
+            return false;
+          } else {
+            $($ele).next().text("");
+            $($ele).next().hide();
+            if (sign > 0) {
+              sign -= 1;
+            }
+            return true;
+          }
+        }
+      }
+      function cs(event) {
+        checkField(event, "*");
+      }
+    </script>
+  </body>
+</html>
